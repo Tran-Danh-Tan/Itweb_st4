@@ -200,5 +200,24 @@ public class UserDaoImpl extends DBConnectSQL implements IUserDao{
 		return duplicate;
 	}
 
+	public int editProfile(UserModel user) {
+		int ketQua = 0;
+		String query = "UPDATE users SET email=? , fullname = ?, images = ?, phone = ? WHERE id=?";
+		try {
+			conn = super.getDBConnection();
+			ps = conn.prepareStatement(query);
+			ps.setString(1, user.getEmail());
+			ps.setString(2, user.getFullName());
+			ps.setString(3, user.getImages());
+			ps.setString(4, user.getPhone());
+			ps.setInt(5, user.getId());
+			ketQua = ps.executeUpdate();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ketQua;
+	}
+	
+	
 	
 }
