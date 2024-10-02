@@ -12,7 +12,8 @@ import vn.iotstar.models.CategoryModel;
 import vn.iotstar.services.ICategoryService;
 import vn.iotstar.services.impl.CategoryServiceImpl;
 
-@WebServlet(urlPatterns = {"/admin/categories" , "/admin/category/add" , "/admin/category/insert"})
+@WebServlet(urlPatterns = {"/admin/categories" , "/admin/category/add" , "/admin/category/insert" , "/admin/category/edit" 
+		, "/admin/category/update" , "/admin/category/delete" , "/admin/category/search"})
 public class CategoryController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -31,6 +32,16 @@ public class CategoryController extends HttpServlet {
 			req.getRequestDispatcher("/views/admin/category-list.jsp").forward(req, resp);
 		}else if(url.contains("add")) {
 			req.getRequestDispatcher("/views/admin/category-add.jsp").forward(req, resp);
+		}else if(url.contains("edit")) {
+			int id = Integer.parseInt(req.getParameter("id"));					
+			CategoryModel category = cateService.findById(id);
+			req.setAttribute("cate", category);	
+			
+			req.getRequestDispatcher("/views/admin/category-edit.jsp").forward(req, resp);
+		}else if(url.contains("delete")) {
+			String id = req.getParameter("id");
+			cateService.delete(Integer.parseInt(id));
+			resp.sendRedirect(req.getContextPath() + "/admin/categories");
 		}
 	}
 	
@@ -52,7 +63,22 @@ public class CategoryController extends HttpServlet {
 			category.setStatus(statuss);
 			
 			cateService.insert(category);
-			resp.sendRedirect(req.getContextPath() + "/admin/categories");;
+			resp.sendRedirect(req.getContextPath() + "/admin/categories");
+		}else if(url.contains("update")) {
+			int categoryid = Integer.parseInt(req.getParameter("categoryid")); 	
+			String categoryname = req.getParameter("categoryname");
+			String status = req.getParameter("status");
+			int statuss = Integer.parseInt(status);
+			String images = "https://th.bing.com/th/id/OIP.wZ7GIC9_zoWZyxbp2Hlq6AHaHa?rs=1&pid=ImgDetMain";
+			
+			CategoryModel category = new CategoryModel();
+			category.setCategoryid(categoryid);
+			category.setCategoryname (categoryname); 
+			category.setImages(images);
+			category.setStatus(statuss);
+			
+			cateService.update(category);
+			resp.sendRedirect(req.getContextPath() + "/admin/categories");
 		}
 	}
 }

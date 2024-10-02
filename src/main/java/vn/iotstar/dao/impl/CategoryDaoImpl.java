@@ -117,7 +117,7 @@ public class CategoryDaoImpl implements ICategoryDao {
 		try {
 			conn = new DBConnectSQL().getDBConnection() ;
 			ps = conn.prepareStatement(sql);
-			ps.setInt(4, id);
+			ps.setInt(1, id);
 			ps.executeUpdate();
 			conn.close();
 			rs.close();
